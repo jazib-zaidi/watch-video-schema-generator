@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+      }
+
+      body {
+        background-color: #fef7f1;
+        padding: 2rem;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo {
+        height: 60px;
+        margin-bottom: 1rem;
+      }
+
+      .title {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-left: 0.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #ff6b35;
+      }
+
+      .json-output {
+        background: #1a1a1a;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+      }
+
+      pre {
+        color: #fff;
+        font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+        font-size: 0.9rem;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      .script-tag {
+        color: #e06c75;
+      }
+
+      .button {
+        width: 100%;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+      }
+
+      .button-primary {
+        background-color: #ff6b35;
+        color: white;
+      }
+
+      .button-primary:hover {
+        background-color: #ff5a1f;
+      }
+
+      .button-outline {
+        background-color: white;
+        color: #666;
+        border: 1px solid #ddd;
+      }
+
+      .button-outline:hover {
+        background-color: #f5f5f5;
+      }
+
+      .icon {
+        margin-right: 0.5rem;
+      }
+
+      .success-alert {
+        background-color: #ecfdf5;
+        border: 1px solid #10b981;
+        color: #047857;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      @media (max-width: 1024px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1 class="title">FeedOps Schema Generator</h1>
+        <p class="subtitle">
+          Generate JSON-LD schema for Youtube video content
+        </p>
+      </header>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <svg
+              class="icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
+            </svg>
+            <h2 class="card-title">Input Details</h2>
+          </div>
+
+          <form id="schemaForm">
+            <div class="form-group">
+              <label for="title">Video Title</label>
+              <input
+                type="text"
+                id="title"
+                placeholder="Enter video title"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="description">Video Description</label>
+              <input
+                type="text"
+                id="description"
+                placeholder="Enter video description"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="thumbnailUrl">Thumbnail URL</label>
+              <input
+                type="url"
+                id="thumbnailUrl"
+                placeholder="https://example.com/thumbnail.jpg"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="uploadDate">Upload Date</label>
+              <input type="date" id="uploadDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="duration">Duration (e.g., 3.34 for 3m34s)</label>
+              <input type="text" id="duration" placeholder="3.34" required />
+            </div>
+
+            <div class="form-group">
+              <label for="embedUrl">YouTube Embed URL</label>
+              <input
+                type="url"
+                id="embedUrl"
+                placeholder="https://www.youtube.com/embed/video-id"
+                required
+              />
+            </div>
+
+            <button type="reset" class="button button-outline">
+              <svg
+                class="icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+              </svg>
+              Reset Form
+            </button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <svg
+              class="icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
+            </svg>
+            <h2 class="card-title">Generated JSON-LD</h2>
+          </div>
+
+          <div class="json-output">
+            <pre
+              id="jsonOutput"
+            ><span class="script-tag">&lt;script type="application/ld+json"&gt;</span>
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "",
+  "description": "",
+  "thumbnailUrl": "",
+  "uploadDate": "",
+  "duration": "",
+  "embedUrl": "",
+  "publisher": {
+    "@type": "Organization",
+    "name": "FeedOps",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://feedopsstg.wpengine.com/wp-content/uploads/elementor/thumbs/feedops-logo-qlmrdsabtzls2xhr15ion7pzc61x98lg5r47ipl9d2.png"
+    }
+  }
+}
+<span class="script-tag">&lt;/script&gt;</span></pre>
+          </div>
+
+          <button id="copyButton" class="button button-primary">
+            <svg
+              class="icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path
+                d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+              />
+            </svg>
+            Copy JSON-LD
+          </button>
+
+          <div id="successAlert" class="success-alert" style="display: none">
+            JSON-LD copied to clipboard!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('schemaForm');
+      const inputs = form.querySelectorAll('input');
+      const jsonOutput = document.getElementById('jsonOutput');
+      const copyButton = document.getElementById('copyButton');
+      const successAlert = document.getElementById('successAlert');
+
+      function convertDurationToISO8601(duration) {
+        const [minutes, seconds] = duration.toString().split('.');
+        const formattedSeconds = seconds ? seconds.padEnd(2, '0') : '00';
+        return `PT${minutes}M${formattedSeconds}S`;
+      }
+
+      function updateJSON() {
+        const jsonData = {
+          '@context': 'https://schema.org',
+          '@type': 'VideoObject',
+          'name': document.getElementById('title').value,
+          'description': document.getElementById('description').value,
+          'thumbnailUrl': document.getElementById('thumbnailUrl').value,
+          'uploadDate': document.getElementById('uploadDate').value,
+          'duration': convertDurationToISO8601(
+            document.getElementById('duration').value
+          ),
+          'embedUrl': document.getElementById('embedUrl').value,
+          'publisher': {
+            '@type': 'Organization',
+            'name': 'FeedOps',
+            'logo': {
+              '@type': 'ImageObject',
+              'url':
+                'https://feedopsstg.wpengine.com/wp-content/uploads/elementor/thumbs/feedops-logo-qlmrdsabtzls2xhr15ion7pzc61x98lg5r47ipl9d2.png',
+            },
+          },
+        };
+
+        // Format with script tags
+        jsonOutput.innerHTML = `<span class="script-tag">&lt;script type="application/ld+json"&gt;</span>
+${JSON.stringify(jsonData, null, 2)}
+<span class="script-tag">&lt;/script&gt;</span>`;
+      }
+
+      inputs.forEach((input) => {
+        input.addEventListener('input', updateJSON);
+      });
+
+      copyButton.addEventListener('click', () => {
+        // Get the text content including script tags
+        const textToCopy = jsonOutput.textContent;
+        navigator.clipboard.writeText(textToCopy);
+        successAlert.style.display = 'block';
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 2000);
+      });
+
+      form.addEventListener('reset', () => {
+        setTimeout(updateJSON, 0);
+      });
+    </script>
+  </body>
+</html>
